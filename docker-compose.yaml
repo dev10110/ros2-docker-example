@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  ros2:
+    # specify where the Dockerfile you want to build is
+    build: . 
+    # allow using the terminal
+    tty: true 
+    # gives the container access to any devices connected to the computer
+    privileged: true
+    # use the computer's networking stack
+    # necessary for two docker containers to be able to talk to each other in ROS2 
+    network_mode: "host" # this 
+    volumes:
+      - ./colcon_ws:/root/colcon_ws
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    environment:
+      # specify the display drivers
+      - DISPLAY=$DISPLAY
+      # if you want to specify a ros domain id (or other environment parameters) this is a good place
+      # - ROS_DOMAIN_ID=2 
