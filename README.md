@@ -4,6 +4,13 @@
 This is a small example of how to use to docker with ros2. As an example, it includes the `cpp_pubsub` package from the ros2 tutorials. 
 
 
+## Dev Env Setup
+
+1. Install `docker` and `docker-compose` following official docs: https://docs.docker.com/engine/install/ubuntu/
+2. Run the post-install steps: https://docs.docker.com/engine/install/linux-postinstall/
+
+If you want to setup with NVidia GPUs, see the GPU section of this document. 
+
 ##  Build the container
 From the root directory, run
 ```
@@ -57,4 +64,42 @@ Due to the shared volume, the permissions can sometimes get a little complicated
 ## Security
 We have used `network_mode="host"` and `privileged=true` inside the `docker-compose.yaml` which is very bad practice from a security pov. If you care about this, look into the docker documentation on how to set up a `docker-compose.yaml` so you only expose the things you want to expose.
 
+## Using GPUs
+You need to configure your docker installation to use GPUs. i Option 1 is recommended as it seems to be more reliable
+
+### Option 1 (configure docker default runtime)
+
+Mostly adapted from here: https://nvidia-isaac-ros.github.io/getting_started/dev_env_setup.html
+
+1. Install the `nvidia-container-toolkit` following https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#installing-with-apt
+2. Configure `nvidia-container-toolkit` for Docker following https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuring-docker
+On `Jetson` platforms configure your SSD too - highly recommended to use an SSD for faster read/write
+3. Restart Docker:
+```
+sudo systemctl daemon-reload && sudo systemctl restart docker
+```
+
+Step 2 should configure `/etc/docker/daemon.json` to ensure that it is using the `nvidia` runtime by default. 
+
+
+
+
+### Option 2 (modify docker compose)
+
+You can either add the lines in the `deploy` section to the `docker-compose.yaml`
+```
+version: "3"
+services:
+  ros2:
+    ... 
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+```
+
+or you c
 
