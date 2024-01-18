@@ -65,7 +65,7 @@ Due to the shared volume, the permissions can sometimes get a little complicated
 We have used `network_mode="host"` and `privileged=true` inside the `docker-compose.yaml` which is very bad practice from a security pov. If you care about this, look into the docker documentation on how to set up a `docker-compose.yaml` so you only expose the things you want to expose.
 
 ## Using GPUs
-You need to configure your docker installation to use GPUs. i Option 1 is recommended as it seems to be more reliable
+You need to configure your docker installation to use GPUs. i Option 1 is recommended as it seems to be more reliable.
 
 ### Option 1 (configure docker default runtime)
 
@@ -81,10 +81,9 @@ sudo systemctl daemon-reload && sudo systemctl restart docker
 
 Step 2 should configure `/etc/docker/daemon.json` to ensure that it is using the `nvidia` runtime by default. 
 
-
-
-
 ### Option 2 (modify docker compose)
+
+Get the `nvidia-container-toolkit` as in step 1 above.
 
 You can either add the lines in the `deploy` section to the `docker-compose.yaml`
 ```
@@ -100,6 +99,3 @@ services:
               count: all
               capabilities: [gpu]
 ```
-
-or you c
-
