@@ -27,6 +27,12 @@ The `-d` flag allows the container to be created in detached mode, so that you c
 
 Since the `./colcon_ws` folder has been mounted, anything you do inside that folder (either inside or outside the docker container) will be synced to your local computer. This makes it particularly easy to `git commit` things from outside the docker container, and to not loose any files. Note, this also means that anything saved outside of `/root/colcon_ws` inside the docker will not be saved when you stop and restart the docker container. 
 
+To enable graphics, run
+```
+xhost +
+```
+outside the docker, before running `docker compose up`.
+
 ## Enter into the container
 To run commands into the container, you need to get a terminal into the container. 
 ```
@@ -83,7 +89,20 @@ On `Jetson` platforms configure your SSD too - highly recommended to use an SSD 
 sudo systemctl daemon-reload && sudo systemctl restart docker
 ```
 
-Step 2 should configure `/etc/docker/daemon.json` to ensure that it is using the `nvidia` runtime by default. 
+Step 2 should configure `/etc/docker/daemon.json` to ensure that it is using the `nvidia` runtime by default. This should be the same as adding 
+```
+{
+    ...
+    "runtimes": {
+        "nvidia": {
+            "args": [], 
+            "path": "nvidia-container-runtime"
+        }
+    },  
+    "default-runtime": "nvidia",
+    ... 
+}
+```
 
 ### Option 2 (modify docker compose)
 
@@ -98,6 +117,11 @@ services:
     deploy:
       resources:
         reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+```
 
 ## Troubleshooting
 
@@ -107,9 +131,8 @@ sudo ufw disable
 ```
 outside the docker, and run `docker compose down` and `docker compose up`.
 
-
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+2. Graphics aren't working, or you are getting cryptic std::out messages like 'libGL not found', try making your host machine allow external devices to send graphics. Run
 ```
+xhost +
+``
+outside the docker, and try again.
