@@ -136,5 +136,5 @@ outside the docker, and run `docker compose down` and `docker compose up`.
 2. Graphics aren't working, or you are getting cryptic std::out messages like 'libGL not found', try making your host machine allow external devices to send graphics. Run
 ```
 xhost +
-``
+```
 outside the docker, and try again.
