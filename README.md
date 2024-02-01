@@ -89,7 +89,9 @@ On `Jetson` platforms configure your SSD too - highly recommended to use an SSD 
 sudo systemctl daemon-reload && sudo systemctl restart docker
 ```
 
-Step 2 should configure `/etc/docker/daemon.json` to ensure that it is using the `nvidia` runtime by default. This should be the same as adding 
+Step 2 should configure `/etc/docker/daemon.json` to ensure that it is using the `nvidia` runtime by default. 
+
+This should be the same as adding the following lines to `/etc/docker/daemon.json`:
 ```
 {
     ...
