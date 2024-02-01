@@ -98,6 +98,16 @@ services:
     deploy:
       resources:
         reservations:
+
+## Troubleshooting
+
+1. If you are having trouble sending/receiving messages across two terminals, check the ubuntu firewall settings. To disable, try running
+```
+sudo ufw disable
+```
+outside the docker, and run `docker compose down` and `docker compose up`.
+
+
           devices:
             - driver: nvidia
               count: all
